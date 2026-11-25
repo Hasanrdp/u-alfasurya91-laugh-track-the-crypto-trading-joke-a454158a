@@ -36,8 +36,8 @@ def output_dir():
     return os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output"
 
 
-def check_written(path, data):
-    """Read the file back and check it byte for byte against the pin."""
+def verify(path, data):
+    """Read the file back and verify it byte for byte against the pin."""
     with open(path, "rb") as handle:
         written = handle.read()
     if written != data:
@@ -69,8 +69,8 @@ def main():
     path = os.path.join(directory, "entry.txt")
     with open(path, "wb") as handle:
         handle.write(data)
-    if not check_written(path, data):
-        raise SystemExit("read-back verification failed for entry.txt")
+    if not verify(path, data):
+        raise SystemExit("verification failed: written file does not match")
     print("wrote %s (%d bytes, sha256 %s)" % (path, EXPECTED_BYTES, EXPECTED_SHA256))
     return 0
 
